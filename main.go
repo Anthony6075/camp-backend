@@ -1,12 +1,14 @@
 package main
 
 import (
+	"camp-backend/handler"
+	"camp-backend/init"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func main() {
-	setupDatasource()
+	init.SetupDatasource()
 
 	r := setupRouter()
 	r.Run(":8080")
@@ -17,38 +19,38 @@ func setupRouter() *gin.Engine {
 
 	auth := r.Group("/auth")
 	{
-		auth.POST("/login", login)
-		auth.POST("/logout", logout)
-		auth.GET("/whoami", whoami)
+		auth.POST("/login", handler.Login)
+		auth.POST("/logout", handler.Logout)
+		auth.GET("/whoami", handler.Whoami)
 	}
 
 	member := r.Group("/member")
 	{
-		member.POST("/create", createMember)
-		member.GET("", getMember)
-		member.GET("/list", getMemberList)
-		member.POST("/update", updateMember)
-		member.POST("/delete", deleteMember)
+		member.POST("/create", handler.CreateMember)
+		member.GET("", handler.GetMember)
+		member.GET("/list", handler.GetMemberList)
+		member.POST("/update", handler.UpdateMember)
+		member.POST("/delete", handler.DeleteMember)
 	}
 
 	course := r.Group("/course")
 	{
-		course.POST("/create", createCourse)
-		course.GET("/get", getCourse)
-		course.POST("/schedule", scheduleCourse)
+		course.POST("/create", handler.CreateCourse)
+		course.GET("/get", handler.GetCourse)
+		course.POST("/schedule", handler.ScheduleCourse)
 	}
 
 	courseTeacher := r.Group("/teacher")
 	{
-		courseTeacher.POST("/bind_course", bindCourse)
-		courseTeacher.POST("/unbind_course", unbindCourse)
-		courseTeacher.GET("/get_course", getTeacherCourse)
+		courseTeacher.POST("/bind_course", handler.BindCourse)
+		courseTeacher.POST("/unbind_course", handler.UnbindCourse)
+		courseTeacher.GET("/get_course", handler.GetTeacherCourse)
 	}
 
 	student := r.Group("/student")
 	{
-		student.POST("/book_course", bookCourse)
-		student.GET("/course", getStudentCourse)
+		student.POST("/book_course", handler.BookCourse)
+		student.GET("/course", handler.GetStudentCourse)
 	}
 
 	r.GET("hello", func(c *gin.Context) {

@@ -1,6 +1,7 @@
-package main
+package handler
 
 import (
+	"camp-backend/init"
 	"camp-backend/types"
 	"errors"
 	"github.com/gin-gonic/gin"
@@ -8,7 +9,7 @@ import (
 	"net/http"
 )
 
-func login(c *gin.Context) {
+func Login(c *gin.Context) {
 	var request types.LoginRequest
 	if err := c.BindJSON(&request); err != nil {
 		c.AbortWithError(http.StatusBadRequest, err)
@@ -18,7 +19,7 @@ func login(c *gin.Context) {
 	currentUser := new(types.TMember)
 	response := new(types.LoginResponse)
 
-	err := Db.First(currentUser, "username = ?", request.Username).Error
+	err := init.Db.First(currentUser, "username = ?", request.Username).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 
@@ -54,12 +55,12 @@ func login(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func logout(c *gin.Context) {
+func Logout(c *gin.Context) {
 	c.SetCookie("camp-session", "", -1, "/", "localhost", false, true)
 	c.JSON(http.StatusOK, gin.H{})
 }
 
-func whoami(c *gin.Context) {
+func Whoami(c *gin.Context) {
 	response := new(types.WhoAmIResponse)
 
 	UserID, err := c.Cookie("camp-session")
@@ -71,7 +72,7 @@ func whoami(c *gin.Context) {
 	}
 
 	currentUser := new(types.TMember)
-	if err = Db.First(currentUser, UserID).Error; err != nil {
+	if err = init.Db.First(currentUser, UserID).Error; err != nil {
 		response.Code = types.UnknownError
 		response.Data = types.TMember{}
 		c.JSON(http.StatusUnauthorized, response)

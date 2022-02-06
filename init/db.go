@@ -1,4 +1,4 @@
-package main
+package init
 
 import (
 	"camp-backend/types"
@@ -14,7 +14,7 @@ const (
 
 var Db *gorm.DB
 
-func setupDatasource() {
+func SetupDatasource() {
 	dsn := "root:bytedancecamp@tcp(" + dataServer + ":3306)/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
 	var err error
 	Db, err = gorm.Open(mysql.Open(dsn))
