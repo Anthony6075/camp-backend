@@ -2,13 +2,13 @@ package main
 
 import (
 	"camp-backend/handler"
-	"camp-backend/init"
+	"camp-backend/initial"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func main() {
-	init.SetupDatasource()
+	initial.SetupDatasource()
 
 	r := setupRouter()
 	r.Run(":8080")

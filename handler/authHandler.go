@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"camp-backend/init"
+	"camp-backend/initial"
 	"camp-backend/types"
 	"errors"
 	"github.com/gin-gonic/gin"
@@ -19,7 +19,7 @@ func Login(c *gin.Context) {
 	currentUser := new(types.TMember)
 	response := new(types.LoginResponse)
 
-	err := init.Db.First(currentUser, "username = ?", request.Username).Error
+	err := initial.Db.First(currentUser, "username = ?", request.Username).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 
@@ -72,7 +72,7 @@ func Whoami(c *gin.Context) {
 	}
 
 	currentUser := new(types.TMember)
-	if err = init.Db.First(currentUser, UserID).Error; err != nil {
+	if err = initial.Db.First(currentUser, UserID).Error; err != nil {
 		response.Code = types.UnknownError
 		response.Data = types.TMember{}
 		c.JSON(http.StatusUnauthorized, response)

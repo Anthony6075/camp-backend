@@ -1,4 +1,4 @@
-package init
+package initial
 
 import (
 	"camp-backend/types"
