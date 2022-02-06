@@ -1,5 +1,8 @@
 package types
 
+// 系统内置管理员账号
+// 账号名：JudgeAdmin 密码：JudgePassword2022
+
 type TMember struct {
 	UserID    string   `json:"userID" gorm:"primaryKey"`
 	Nickname  string   `json:"nickname"`
@@ -23,5 +26,15 @@ const (
 	Teacher UserType = 3
 )
 
-// 系统内置管理员账号
-// 账号名：JudgeAdmin 密码：JudgePassword2022
+func (u UserType) String() string {
+	switch u {
+	case Admin:
+		return "Admin"
+	case Student:
+		return "Student"
+	case Teacher:
+		return "Teacher"
+	default:
+		return "Unknown"
+	}
+}

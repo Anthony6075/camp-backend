@@ -14,7 +14,7 @@ type LoginRequest struct {
 type LoginResponse struct {
 	Code ErrNo `json:"code"`
 	Data struct {
-		UserID string `json:"user_id"`
+		UserID string `json:"userID"`
 	} `json:"data"`
 }
 
