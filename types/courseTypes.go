@@ -6,26 +6,26 @@ package types
 // 创建课程
 // Method: Post
 type CreateCourseRequest struct {
-	Name string
-	Cap  int
+	Name string `json:"name" binding:"required"`
+	Cap  int    `json:"cap" binding:"required"`
 }
 
 type CreateCourseResponse struct {
-	Code ErrNo
+	Code ErrNo `json:"code"`
 	Data struct {
-		CourseID string
-	}
+		CourseID string `json:"courseID"`
+	} `json:"data"`
 }
 
 // 获取课程
 // Method: Get
 type GetCourseRequest struct {
-	CourseID string
+	CourseID string `json:"courseID" binding:"required"`
 }
 
 type GetCourseResponse struct {
-	Code ErrNo
-	Data TCourse
+	Code ErrNo   `json:"code"`
+	Data TCourse `json:"data"`
 }
 
 // 老师绑定课程
@@ -33,36 +33,36 @@ type GetCourseResponse struct {
 // 注：这里的 teacherID 不需要做已落库校验
 // 一个老师可以绑定多个课程 , 不过，一个课程只能绑定在一个老师下面
 type BindCourseRequest struct {
-	CourseID  string
-	TeacherID string
+	CourseID  string `json:"courseID" binding:"required"`
+	TeacherID string `json:"teacherID" binding:"required"`
 }
 
 type BindCourseResponse struct {
-	Code ErrNo
+	Code ErrNo `json:"code"`
 }
 
 // 老师解绑课程
 // Method： Post
 type UnbindCourseRequest struct {
-	CourseID  string
-	TeacherID string
+	CourseID  string `json:"courseID" binding:"required"`
+	TeacherID string `json:"teacherID" binding:"required"`
 }
 
 type UnbindCourseResponse struct {
-	Code ErrNo
+	Code ErrNo `json:"code"`
 }
 
 // 获取老师下所有课程
 // Method：Get
 type GetTeacherCourseRequest struct {
-	TeacherID string
+	TeacherID string `json:"teacherID" binding:"required"`
 }
 
 type GetTeacherCourseResponse struct {
-	Code ErrNo
+	Code ErrNo `json:"code"`
 	Data struct {
-		CourseList []*TCourse
-	}
+		CourseList []TCourse `json:"courseList"`
+	} `json:"data"`
 }
 
 // 排课求解器，使老师绑定课程的最优解， 老师有且只能绑定一个课程

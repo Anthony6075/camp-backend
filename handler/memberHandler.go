@@ -81,7 +81,7 @@ func GetMember(c *gin.Context) {
 	}
 
 	theUser := new(types.TMember)
-	err := initial.Db.First(theUser, "user_id = ?", request.UserID).Error
+	err := initial.Db.First(theUser, request.UserID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		response.Code = types.UserNotExisted
 		c.JSON(http.StatusNotFound, response)

@@ -5,5 +5,7 @@
 5. 第4条的字符串的位是字符个数还是字节？
 6. 错误状态的handler使用AbortWithStatusJSON？
 7. 初始密码目前设置为用户名
-8. 用户ID目前从11开始递增
+8. 用户ID、课程ID目前从11开始递增
 9. 目前成员管理除了创建成员之外未做登录及权限检查
+10. initial.Db未采用同步方法进行保护
+11. 目前修改GetTeacherCourseResponse的CourseList为[]TCourse

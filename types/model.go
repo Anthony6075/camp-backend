@@ -13,9 +13,11 @@ type TMember struct {
 }
 
 type TCourse struct {
-	CourseID  string
-	Name      string
-	TeacherID string
+	CourseID  string  `json:"courseID" gorm:"primaryKey"`
+	Name      string  `json:"name" gorm:"not null;unique"`
+	TeacherID string  `json:"teacherID" gorm:"size:191"`
+	Teacher   TMember `json:"-" gorm:"foreignKey:TeacherID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Capacity  int     `json:"-" gorm:"not null;default:0"`
 }
 
 type UserType int
