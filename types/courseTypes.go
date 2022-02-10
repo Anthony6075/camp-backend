@@ -88,7 +88,7 @@ type BookCourseResponse struct {
 }
 
 type GetStudentCourseRequest struct {
-	StudentID string
+	StudentID string `json:"student_id" binding:"required"`
 }
 
 type GetStudentCourseResponse struct {

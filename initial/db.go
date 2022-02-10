@@ -8,14 +8,16 @@ import (
 )
 
 const (
-	dataServer = "180.184.68.166"
+	dbUser     = "root"
+	dbPassword = "bytedancecamp"
+	dbServer   = "180.184.68.166"
 	dbName     = "camp"
 )
 
 var Db *gorm.DB
 
 func SetupDatasource() {
-	dsn := "root:bytedancecamp@tcp(" + dataServer + ":3306)/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := dbUser + ":" + dbPassword + "@tcp(" + dbServer + ":3306)/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
 	var err error
 	Db, err = gorm.Open(mysql.Open(dsn))
 	if err != nil {

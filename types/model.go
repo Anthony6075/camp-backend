@@ -4,12 +4,13 @@ package types
 // 账号名：JudgeAdmin 密码：JudgePassword2022
 
 type TMember struct {
-	UserID    string   `json:"userID" gorm:"primaryKey"`
-	Nickname  string   `json:"nickname"`
-	Username  string   `json:"username" gorm:"unique;not null"`
-	Password  string   `json:"-" gorm:"not null"`
-	UserType  UserType `json:"userType" gorm:"not null"`
-	IsDeleted bool     `json:"-" gorm:"not null;default:false"`
+	UserID       string    `json:"userID" gorm:"primaryKey"`
+	Nickname     string    `json:"nickname"`
+	Username     string    `json:"username" gorm:"unique;not null"`
+	Password     string    `json:"-" gorm:"not null"`
+	UserType     UserType  `json:"userType" gorm:"not null"`
+	IsDeleted    bool      `json:"-" gorm:"not null;default:false"`
+	LearnCourses []TCourse `gorm:"many2many:learn_courses;joinForeignKey:user_id;joinReferences:course_id;"`
 }
 
 type TCourse struct {

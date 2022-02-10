@@ -52,14 +52,14 @@ func CreateMember(c *gin.Context) {
 
 	currentMaxUserID++
 	var newUser = types.TMember{
-		strconv.FormatInt(currentMaxUserID, 10),
-		request.Nickname,
-		request.Username,
-		request.Password,
-		request.UserType,
-		false,
+		UserID:    strconv.FormatInt(currentMaxUserID, 10),
+		Nickname:  request.Nickname,
+		Username:  request.Username,
+		Password:  request.Password,
+		UserType:  request.UserType,
+		IsDeleted: false,
 	}
-	if err = initial.Db.Create(&newUser).Error; err != nil {
+	if err = initial.Db.Omit("LearnCourses").Create(&newUser).Error; err != nil {
 		response.Code = types.UnknownError
 		c.JSON(http.StatusInternalServerError, response)
 		return
