@@ -17,7 +17,7 @@ func GetStudentCourse(c *gin.Context) {
 	request := new(types.GetStudentCourseRequest)
 	response := new(types.GetStudentCourseResponse)
 
-	request.StudentID = c.Query("student_id")
+	request.StudentID = c.Query("StudentID")
 	if request.StudentID == "" {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusBadRequest, response)

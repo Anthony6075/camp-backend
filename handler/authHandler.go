@@ -22,9 +22,6 @@ func Login(c *gin.Context) {
 	err := initial.Db.First(currentUser, "username = ?", request.Username).Error
 
 	if errors.Is(err, gorm.ErrRecordNotFound) {
-
-		//response.Code = types.UserNotExisted
-		//用户不存在也要返回密码错误？
 		response.Code = types.WrongPassword
 
 		response.Data.UserID = request.Username
@@ -33,7 +30,7 @@ func Login(c *gin.Context) {
 	}
 
 	if currentUser.IsDeleted {
-		response.Code = types.UserHasDeleted
+		response.Code = types.WrongPassword
 		response.Data.UserID = currentUser.UserID
 		c.JSON(http.StatusUnauthorized, response)
 		return
@@ -47,7 +44,7 @@ func Login(c *gin.Context) {
 	}
 
 	_, err = c.Cookie("camp-session")
-	if err != nil { //cookie的name是camp-session,但是value是什么？
+	if err != nil {
 		c.SetCookie("camp-session", currentUser.UserID, 3600, "/", "localhost", false, true)
 	}
 	response.Code = types.OK
@@ -56,8 +53,18 @@ func Login(c *gin.Context) {
 }
 
 func Logout(c *gin.Context) {
+	response := new(types.LogoutResponse)
+
+	_, err := c.Cookie("camp-session")
+	if err != nil {
+		response.Code = types.LoginRequired
+		c.JSON(http.StatusUnauthorized, response)
+		return
+	}
+
 	c.SetCookie("camp-session", "", -1, "/", "localhost", false, true)
-	c.JSON(http.StatusOK, gin.H{})
+	response.Code = types.OK
+	c.JSON(http.StatusOK, response)
 }
 
 func Whoami(c *gin.Context) {

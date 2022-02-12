@@ -6,26 +6,26 @@ package types
 // 创建课程
 // Method: Post
 type CreateCourseRequest struct {
-	Name string `json:"name" binding:"required"`
-	Cap  int    `json:"cap" binding:"required"`
+	Name string `binding:"required"`
+	Cap  int    `binding:"required"`
 }
 
 type CreateCourseResponse struct {
-	Code ErrNo `json:"code"`
+	Code ErrNo
 	Data struct {
-		CourseID string `json:"courseID"`
-	} `json:"data"`
+		CourseID string
+	}
 }
 
 // 获取课程
 // Method: Get
 type GetCourseRequest struct {
-	CourseID string `json:"courseID" binding:"required"`
+	CourseID string `binding:"required"`
 }
 
 type GetCourseResponse struct {
-	Code ErrNo   `json:"code"`
-	Data TCourse `json:"data"`
+	Code ErrNo
+	Data TCourse
 }
 
 // 老师绑定课程
@@ -33,36 +33,36 @@ type GetCourseResponse struct {
 // 注：这里的 teacherID 不需要做已落库校验
 // 一个老师可以绑定多个课程 , 不过，一个课程只能绑定在一个老师下面
 type BindCourseRequest struct {
-	CourseID  string `json:"courseID" binding:"required"`
-	TeacherID string `json:"teacherID" binding:"required"`
+	CourseID  string `binding:"required"`
+	TeacherID string `binding:"required"`
 }
 
 type BindCourseResponse struct {
-	Code ErrNo `json:"code"`
+	Code ErrNo
 }
 
 // 老师解绑课程
 // Method： Post
 type UnbindCourseRequest struct {
-	CourseID  string `json:"courseID" binding:"required"`
-	TeacherID string `json:"teacherID" binding:"required"`
+	CourseID  string `binding:"required"`
+	TeacherID string `binding:"required"`
 }
 
 type UnbindCourseResponse struct {
-	Code ErrNo `json:"code"`
+	Code ErrNo
 }
 
 // 获取老师下所有课程
 // Method：Get
 type GetTeacherCourseRequest struct {
-	TeacherID string `json:"teacherID" binding:"required"`
+	TeacherID string `binding:"required"`
 }
 
 type GetTeacherCourseResponse struct {
-	Code ErrNo `json:"code"`
+	Code ErrNo
 	Data struct {
-		CourseList []TCourse `json:"courseList"`
-	} `json:"data"`
+		CourseList []TCourse
+	}
 }
 
 // 排课求解器，使老师绑定课程的最优解， 老师有且只能绑定一个课程
@@ -88,7 +88,7 @@ type BookCourseResponse struct {
 }
 
 type GetStudentCourseRequest struct {
-	StudentID string `json:"student_id" binding:"required"`
+	StudentID string `binding:"required"`
 }
 
 type GetStudentCourseResponse struct {

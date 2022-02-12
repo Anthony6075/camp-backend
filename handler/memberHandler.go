@@ -73,7 +73,7 @@ func GetMember(c *gin.Context) {
 	request := new(types.GetMemberRequest)
 	response := new(types.GetMemberResponse)
 
-	request.UserID = c.Query("userID")
+	request.UserID = c.Query("UserID")
 	if request.UserID == "" {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusBadRequest, response)
@@ -104,8 +104,8 @@ func GetMemberList(c *gin.Context) {
 	response := new(types.GetMemberListResponse)
 
 	var err1, err2 error
-	request.Limit, err1 = strconv.Atoi(c.Query("limit"))
-	request.Offset, err2 = strconv.Atoi(c.Query("offset"))
+	request.Limit, err1 = strconv.Atoi(c.Query("Limit"))
+	request.Offset, err2 = strconv.Atoi(c.Query("Offset"))
 	if err1 != nil || err2 != nil {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusBadRequest, response)

@@ -51,7 +51,7 @@ func GetCourse(c *gin.Context) {
 	request := new(types.GetCourseRequest)
 	response := new(types.GetCourseResponse)
 
-	request.CourseID = c.Query("courseID")
+	request.CourseID = c.Query("CourseID")
 	if request.CourseID == "" {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusBadRequest, response)
@@ -152,7 +152,7 @@ func GetTeacherCourse(c *gin.Context) {
 	request := new(types.GetTeacherCourseRequest)
 	response := new(types.GetTeacherCourseResponse)
 
-	request.TeacherID = c.Query("teacherID")
+	request.TeacherID = c.Query("TeacherID")
 	if request.TeacherID == "" {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusBadRequest, response)
