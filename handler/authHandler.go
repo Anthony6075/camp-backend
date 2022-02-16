@@ -12,7 +12,7 @@ import (
 func Login(c *gin.Context) {
 	var request types.LoginRequest
 	if err := c.BindJSON(&request); err != nil {
-		c.AbortWithError(http.StatusBadRequest, err)
+		c.AbortWithError(http.StatusOK, err)
 		return
 	}
 
@@ -25,21 +25,21 @@ func Login(c *gin.Context) {
 		response.Code = types.WrongPassword
 
 		response.Data.UserID = request.Username
-		c.JSON(http.StatusUnauthorized, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
 	if currentUser.IsDeleted {
 		response.Code = types.WrongPassword
 		response.Data.UserID = currentUser.UserID
-		c.JSON(http.StatusUnauthorized, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
 	if currentUser.Password != request.Password {
 		response.Code = types.WrongPassword
 		response.Data.UserID = currentUser.UserID
-		c.JSON(http.StatusUnauthorized, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
@@ -58,7 +58,7 @@ func Logout(c *gin.Context) {
 	_, err := c.Cookie("camp-session")
 	if err != nil {
 		response.Code = types.LoginRequired
-		c.JSON(http.StatusUnauthorized, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
@@ -74,7 +74,7 @@ func Whoami(c *gin.Context) {
 	if err != nil {
 		response.Code = types.LoginRequired
 		response.Data = types.TMember{}
-		c.JSON(http.StatusUnauthorized, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
@@ -82,7 +82,7 @@ func Whoami(c *gin.Context) {
 	if err = initial.Db.First(currentUser, UserID).Error; err != nil {
 		response.Code = types.UnknownError
 		response.Data = types.TMember{}
-		c.JSON(http.StatusUnauthorized, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 

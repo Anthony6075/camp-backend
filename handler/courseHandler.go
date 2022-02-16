@@ -19,7 +19,7 @@ func CreateCourse(c *gin.Context) {
 
 	if err := c.BindJSON(request); err != nil {
 		response.Code = types.ParamInvalid
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
@@ -27,7 +27,7 @@ func CreateCourse(c *gin.Context) {
 	err := initial.Db.First(theCourse, "name = ?", request.Name).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		response.Code = types.UnknownError
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
@@ -39,12 +39,12 @@ func CreateCourse(c *gin.Context) {
 	}
 	if err = initial.Db.Omit("TeacherID").Create(&newCourse).Error; err != nil {
 		response.Code = types.UnknownError
-		c.JSON(http.StatusInternalServerError, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 	response.Code = types.OK
 	response.Data.CourseID = strconv.FormatInt(currentMaxCourseID, 10)
-	c.JSON(http.StatusCreated, response)
+	c.JSON(http.StatusOK, response)
 }
 
 func GetCourse(c *gin.Context) {
@@ -54,7 +54,7 @@ func GetCourse(c *gin.Context) {
 	request.CourseID = c.Query("CourseID")
 	if request.CourseID == "" {
 		response.Code = types.ParamInvalid
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
@@ -62,7 +62,7 @@ func GetCourse(c *gin.Context) {
 	err := initial.Db.First(theCourse, request.CourseID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		response.Code = types.UnknownError
-		c.JSON(http.StatusNotFound, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
@@ -77,7 +77,7 @@ func BindCourse(c *gin.Context) {
 
 	if err := c.BindJSON(request); err != nil {
 		response.Code = types.ParamInvalid
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
@@ -85,12 +85,12 @@ func BindCourse(c *gin.Context) {
 	err := initial.Db.First(theTeacher, request.TeacherID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		response.Code = types.UserNotExisted
-		c.JSON(http.StatusNotFound, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 	if theTeacher.UserType.String() != "Teacher" {
 		response.Code = types.ParamInvalid
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
@@ -98,18 +98,18 @@ func BindCourse(c *gin.Context) {
 	err = initial.Db.First(theCourse, request.CourseID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		response.Code = types.CourseNotExisted
-		c.JSON(http.StatusNotFound, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 	if theCourse.TeacherID != "" {
 		response.Code = types.CourseHasBound
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
 	if err := initial.Db.Model(theCourse).Association("Teacher").Append(theTeacher); err != nil {
 		response.Code = types.UnknownError
-		c.JSON(http.StatusInternalServerError, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 	response.Code = types.OK
@@ -122,7 +122,7 @@ func UnbindCourse(c *gin.Context) {
 
 	if err := c.BindJSON(request); err != nil {
 		response.Code = types.ParamInvalid
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
@@ -130,18 +130,18 @@ func UnbindCourse(c *gin.Context) {
 	err := initial.Db.First(theCourse, request.CourseID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		response.Code = types.CourseNotExisted
-		c.JSON(http.StatusNotFound, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 	if theCourse.TeacherID != request.TeacherID {
 		response.Code = types.CourseNotBind
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
 	if err := initial.Db.Model(theCourse).Association("Teacher").Clear(); err != nil {
 		response.Code = types.UnknownError
-		c.JSON(http.StatusInternalServerError, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 	response.Code = types.OK
@@ -155,7 +155,7 @@ func GetTeacherCourse(c *gin.Context) {
 	request.TeacherID = c.Query("TeacherID")
 	if request.TeacherID == "" {
 		response.Code = types.ParamInvalid
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 

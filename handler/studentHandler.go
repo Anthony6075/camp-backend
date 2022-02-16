@@ -20,7 +20,7 @@ func GetStudentCourse(c *gin.Context) {
 	request.StudentID = c.Query("StudentID")
 	if request.StudentID == "" {
 		response.Code = types.ParamInvalid
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
@@ -28,14 +28,14 @@ func GetStudentCourse(c *gin.Context) {
 	err := initial.Db.First(theUser, request.StudentID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) || theUser.UserType.String() != "Student" {
 		response.Code = types.StudentNotExisted
-		c.JSON(http.StatusNotFound, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
 	courses := make([]types.TCourse, 0)
 	if err := initial.Db.Model(theUser).Association("LearnCourses").Find(&courses); err != nil {
 		response.Code = types.UnknownError
-		c.JSON(http.StatusBadRequest, response)
+		c.JSON(http.StatusOK, response)
 		return
 	}
 
