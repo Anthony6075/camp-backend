@@ -4,6 +4,7 @@ import (
 	"camp-backend/initial"
 	"camp-backend/types"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -41,6 +42,8 @@ func CreateMember(c *gin.Context) {
 		c.JSON(http.StatusOK, response)
 		return
 	}
+
+	fmt.Printf("%+v\n", request)
 
 	theUser := new(types.TMember)
 	err = initial.Db.First(theUser, "username = ?", request.Username).Error
@@ -80,6 +83,9 @@ func GetMember(c *gin.Context) {
 		return
 	}
 
+	fmt.Println("-------------------------")
+	fmt.Printf("%+v\n", request)
+
 	theUser := new(types.TMember)
 	err := initial.Db.First(theUser, request.UserID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -112,6 +118,8 @@ func GetMemberList(c *gin.Context) {
 		return
 	}
 
+	fmt.Printf("%+v\n", request)
+
 	members := make([]types.TMember, 0)
 	if err := initial.Db.Limit(request.Limit).Offset(request.Offset).Find(&members).Error; err != nil {
 		response.Code = types.UnknownError
@@ -133,6 +141,8 @@ func UpdateMember(c *gin.Context) {
 		c.JSON(http.StatusOK, response)
 		return
 	}
+
+	fmt.Printf("%+v\n", request)
 
 	theUser := new(types.TMember)
 	err := initial.Db.First(theUser, request.UserID).Error
@@ -163,6 +173,8 @@ func DeleteMember(c *gin.Context) {
 		c.JSON(http.StatusOK, response)
 		return
 	}
+
+	fmt.Printf("%+v\n", request)
 
 	theUser := new(types.TMember)
 	err := initial.Db.First(theUser, request.UserID).Error

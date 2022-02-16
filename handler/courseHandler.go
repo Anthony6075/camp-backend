@@ -23,6 +23,8 @@ func CreateCourse(c *gin.Context) {
 		return
 	}
 
+	fmt.Printf("%+v\n", request)
+
 	theCourse := new(types.TCourse)
 	err := initial.Db.First(theCourse, "name = ?", request.Name).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
@@ -58,6 +60,8 @@ func GetCourse(c *gin.Context) {
 		return
 	}
 
+	fmt.Printf("%+v\n", request)
+
 	theCourse := new(types.TCourse)
 	err := initial.Db.First(theCourse, request.CourseID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -80,6 +84,8 @@ func BindCourse(c *gin.Context) {
 		c.JSON(http.StatusOK, response)
 		return
 	}
+
+	fmt.Printf("%+v\n", request)
 
 	theTeacher := new(types.TMember)
 	err := initial.Db.First(theTeacher, request.TeacherID).Error
@@ -126,6 +132,8 @@ func UnbindCourse(c *gin.Context) {
 		return
 	}
 
+	fmt.Printf("%+v\n", request)
+
 	theCourse := new(types.TCourse)
 	err := initial.Db.First(theCourse, request.CourseID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -158,6 +166,8 @@ func GetTeacherCourse(c *gin.Context) {
 		c.JSON(http.StatusOK, response)
 		return
 	}
+
+	fmt.Printf("%+v\n", request)
 
 	courses := make([]types.TCourse, 0)
 	initial.Db.Where("teacher_id = ?", request.TeacherID).Find(&courses)

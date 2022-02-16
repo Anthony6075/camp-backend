@@ -4,6 +4,7 @@ import (
 	"camp-backend/initial"
 	"camp-backend/types"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -15,6 +16,8 @@ func Login(c *gin.Context) {
 		c.AbortWithError(http.StatusOK, err)
 		return
 	}
+
+	fmt.Printf("%+v\n", request)
 
 	currentUser := new(types.TMember)
 	response := new(types.LoginResponse)
