@@ -11,7 +11,7 @@ func main() {
 	initial.SetupDatasource()
 
 	r := setupRouter()
-	r.Run(":8080")
+	r.Run(":80")
 }
 
 func setupRouter() *gin.Engine {
