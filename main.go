@@ -15,8 +15,8 @@ func main() {
 }
 
 func setupRouter() *gin.Engine {
-	r := gin.Default()
-
+	d := gin.Default()
+	r := d.Group("/api/v1")
 	auth := r.Group("/auth")
 	{
 		auth.POST("/login", handler.Login)
@@ -57,5 +57,5 @@ func setupRouter() *gin.Engine {
 		c.String(http.StatusOK, "hello world")
 	})
 
-	return r
+	return d
 }

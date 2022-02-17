@@ -29,6 +29,7 @@ func Login(c *gin.Context) {
 
 		response.Data.UserID = request.Username
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v  %s\n", response.Code, err)
 		return
 	}
 
@@ -36,6 +37,7 @@ func Login(c *gin.Context) {
 		response.Code = types.WrongPassword
 		response.Data.UserID = currentUser.UserID
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v  currentUser is Deleted\n", response.Code)
 		return
 	}
 
@@ -43,6 +45,8 @@ func Login(c *gin.Context) {
 		response.Code = types.WrongPassword
 		response.Data.UserID = currentUser.UserID
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v WrongPassword\n", response.Code)
+
 		return
 	}
 
@@ -53,6 +57,7 @@ func Login(c *gin.Context) {
 	response.Code = types.OK
 	response.Data.UserID = currentUser.UserID
 	c.JSON(http.StatusOK, response)
+	fmt.Printf("%+v\n", response.Code)
 }
 
 func Logout(c *gin.Context) {
@@ -61,12 +66,16 @@ func Logout(c *gin.Context) {
 	_, err := c.Cookie("camp-session")
 	if err != nil {
 		response.Code = types.LoginRequired
+		fmt.Printf("%+v  User not Login\n", response.Code)
+
 		c.JSON(http.StatusOK, response)
 		return
 	}
 
 	c.SetCookie("camp-session", "", -1, "/", "localhost", false, true)
 	response.Code = types.OK
+	fmt.Printf("%+v \n", response.Code)
+
 	c.JSON(http.StatusOK, response)
 }
 
@@ -74,10 +83,13 @@ func Whoami(c *gin.Context) {
 	response := new(types.WhoAmIResponse)
 
 	UserID, err := c.Cookie("camp-session")
+
 	if err != nil {
 		response.Code = types.LoginRequired
 		response.Data = types.TMember{}
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v  User not Login\n", response.Code)
+
 		return
 	}
 
@@ -86,10 +98,14 @@ func Whoami(c *gin.Context) {
 		response.Code = types.UnknownError
 		response.Data = types.TMember{}
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 
 	response.Code = types.OK
 	response.Data = *currentUser
 	c.JSON(http.StatusOK, response)
+	fmt.Printf("%+v \n", response.Code)
+
 }
