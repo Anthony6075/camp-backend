@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	redisAddr = "localhost:6379"
+	redisAddr = "180.184.68.166:6379"
 	password  = ""
 )
 

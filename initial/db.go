@@ -9,8 +9,8 @@ import (
 
 const (
 	dbUser     = "root"
-	dbPassword = "123"       //"bytedancecamp"
-	dbServer   = "localhost" //"180.184.68.166"
+	dbPassword = "bytedancecamp"
+	dbServer   = "180.184.68.166"
 	dbName     = "camp"
 )
 

@@ -12,7 +12,7 @@ func main() {
 	initial.SetupRedis()
 
 	r := setupRouter()
-	r.Run(":8080")
+	r.Run(":80")
 }
 
 func setupRouter() *gin.Engine {
