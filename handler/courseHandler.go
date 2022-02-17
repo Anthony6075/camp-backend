@@ -167,6 +167,42 @@ func GetTeacherCourse(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func ScheduleCourse(c *gin.Context) {
-
+func dfs(teacher string, courseList map[string][]string, used map[string]bool, pre map[string]string) bool {
+	for _, course := range courseList[teacher] {
+		if !used[course] {
+			used[course] = true
+			if pre[course] == "" || dfs(pre[course], courseList, used, pre) {
+				pre[course] = teacher
+				return true
+			}
+		}
+	}
+	return false
 }
+
+func ScheduleCourse(c *gin.Context) {
+	request := new(types.ScheduleCourseRequest)
+	response := new(types.ScheduleCourseResponse)
+
+	pre := make(map[string]string)
+
+	if err := c.ShouldBindJSON(&request.TeacherCourseRelationShip); err != nil {
+		response.Code = types.ParamInvalid
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	for teacher, _ := range request.TeacherCourseRelationShip {
+		used := make(map[string]bool)
+		if dfs(teacher, request.TeacherCourseRelationShip, used, pre){
+			continue
+		}
+	}
+
+	for course, teacher := range pre {
+		response.Data[teacher] = course
+	}
+	response.Code = types.OK
+	c.JSON(http.StatusOK, response)
+}
+
