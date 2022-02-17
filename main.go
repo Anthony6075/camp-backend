@@ -11,11 +11,12 @@ func main() {
 	initial.SetupDatasource()
 
 	r := setupRouter()
-	r.Run(":8080")
+	r.Run(":80")
 }
 
 func setupRouter() *gin.Engine {
-	r := gin.Default()
+	d := gin.Default()
+	r := d.Group("/api/v1")
 
 	auth := r.Group("/auth")
 	{
@@ -57,5 +58,5 @@ func setupRouter() *gin.Engine {
 		c.String(http.StatusOK, "hello world")
 	})
 
-	return r
+	return d
 }
