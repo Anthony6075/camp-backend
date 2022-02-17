@@ -5,17 +5,32 @@ import (
 	"camp-backend/initial"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
 func main() {
 	initial.SetupDatasource()
+	initial.SetupRedis()
 
 	r := setupRouter()
 	r.Run(":8080")
 }
 
 func setupRouter() *gin.Engine {
-	r := gin.Default()
+	d := gin.Default()
+
+	d.GET("/test1", func(c *gin.Context) {
+		p := c.Query("p")
+		if p == "1" {
+			time.Sleep(10 * time.Second)
+			c.JSON(http.StatusOK, gin.H{"111": "OK"})
+		} else {
+			time.Sleep(2 * time.Second)
+			c.JSON(http.StatusOK, gin.H{"other": "OK"})
+		}
+	})
+
+	r := d.Group("/api/v1")
 
 	auth := r.Group("/auth")
 	{
@@ -57,5 +72,5 @@ func setupRouter() *gin.Engine {
 		c.String(http.StatusOK, "hello world")
 	})
 
-	return r
+	return d
 }
