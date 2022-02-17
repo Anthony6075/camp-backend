@@ -186,23 +186,24 @@ func ScheduleCourse(c *gin.Context) {
 
 	pre := make(map[string]string)
 
-	if err := c.ShouldBindJSON(&request.TeacherCourseRelationShip); err != nil {
+	if err := c.BindJSON(request); err != nil {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+	g := request.TeacherCourseRelationShip
 
-	for teacher, _ := range request.TeacherCourseRelationShip {
+	for teacher, _ := range g {
 		used := make(map[string]bool)
-		if dfs(teacher, request.TeacherCourseRelationShip, used, pre){
+		if dfs(teacher, g, used, pre) {
 			continue
 		}
 	}
 
+	response.Data = make(map[string]string)
 	for course, teacher := range pre {
 		response.Data[teacher] = course
 	}
 	response.Code = types.OK
 	c.JSON(http.StatusOK, response)
 }
-
