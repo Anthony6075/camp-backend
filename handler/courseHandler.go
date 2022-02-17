@@ -20,6 +20,7 @@ func CreateCourse(c *gin.Context) {
 	if err := c.BindJSON(request); err != nil {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
 		return
 	}
 
@@ -30,6 +31,8 @@ func CreateCourse(c *gin.Context) {
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		response.Code = types.UnknownError
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v  %s\n", response.Code, err)
+
 		return
 	}
 
@@ -42,10 +45,13 @@ func CreateCourse(c *gin.Context) {
 	if err = initial.Db.Omit("TeacherID").Create(&newCourse).Error; err != nil {
 		response.Code = types.UnknownError
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v %s\n", response.Code, err)
 		return
 	}
 	response.Code = types.OK
 	response.Data.CourseID = strconv.FormatInt(currentMaxCourseID, 10)
+	fmt.Printf("%+v \n", response.Code)
+
 	c.JSON(http.StatusOK, response)
 }
 
@@ -54,25 +60,31 @@ func GetCourse(c *gin.Context) {
 	response := new(types.GetCourseResponse)
 
 	request.CourseID = c.Query("CourseID")
+	fmt.Printf("%+v\n", request)
+
 	if request.CourseID == "" {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v %s\n", response.Code, request.CourseID)
+
 		return
 	}
-
-	fmt.Printf("%+v\n", request)
 
 	theCourse := new(types.TCourse)
 	err := initial.Db.First(theCourse, request.CourseID).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		response.Code = types.UnknownError
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v, %s\n", response.Code, err)
+
 		return
 	}
 
 	response.Code = types.OK
 	response.Data = *theCourse
 	c.JSON(http.StatusOK, response)
+	fmt.Printf("%+v\n", response.Code)
+
 }
 
 func BindCourse(c *gin.Context) {
