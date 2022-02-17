@@ -9,6 +9,7 @@ import (
 
 func main() {
 	initial.SetupDatasource()
+	initial.SetupRedis()
 
 	r := setupRouter()
 	r.Run(":80")
