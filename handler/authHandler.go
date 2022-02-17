@@ -4,7 +4,6 @@ import (
 	"camp-backend/initial"
 	"camp-backend/types"
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -14,11 +13,8 @@ func Login(c *gin.Context) {
 	var request types.LoginRequest
 	if err := c.BindJSON(&request); err != nil {
 		c.AbortWithError(http.StatusOK, err)
-		fmt.Printf("%s \n", err)
 		return
 	}
-
-	fmt.Printf("%+v\n", request)
 
 	currentUser := new(types.TMember)
 	response := new(types.LoginResponse)
@@ -30,8 +26,6 @@ func Login(c *gin.Context) {
 
 		response.Data.UserID = request.Username
 		c.JSON(http.StatusOK, response)
-		fmt.Printf("%+v  %s\n", response.Code, err)
-
 		return
 	}
 
@@ -39,8 +33,6 @@ func Login(c *gin.Context) {
 		response.Code = types.WrongPassword
 		response.Data.UserID = currentUser.UserID
 		c.JSON(http.StatusOK, response)
-		fmt.Printf("%+v User is Deleted \n", response.Code)
-
 		return
 	}
 
@@ -48,8 +40,6 @@ func Login(c *gin.Context) {
 		response.Code = types.WrongPassword
 		response.Data.UserID = currentUser.UserID
 		c.JSON(http.StatusOK, response)
-		fmt.Printf("%+v  WrongPassword\n", response.Code)
-
 		return
 	}
 
@@ -60,8 +50,6 @@ func Login(c *gin.Context) {
 	response.Code = types.OK
 	response.Data.UserID = currentUser.UserID
 	c.JSON(http.StatusOK, response)
-	fmt.Printf("%+v\n", response.Code)
-
 }
 
 func Logout(c *gin.Context) {
@@ -71,16 +59,12 @@ func Logout(c *gin.Context) {
 	if err != nil {
 		response.Code = types.LoginRequired
 		c.JSON(http.StatusOK, response)
-		fmt.Printf("%+v  %s\n", response.Code, err)
-
 		return
 	}
 
 	c.SetCookie("camp-session", "", -1, "/", "", false, true)
 	response.Code = types.OK
 	c.JSON(http.StatusOK, response)
-	fmt.Printf("%+v \n", response.Code)
-
 }
 
 func Whoami(c *gin.Context) {
@@ -91,8 +75,6 @@ func Whoami(c *gin.Context) {
 		response.Code = types.LoginRequired
 		response.Data = types.TMember{}
 		c.JSON(http.StatusOK, response)
-		fmt.Printf("%+v  User not Login\n", response.Code)
-
 		return
 	}
 
@@ -101,14 +83,10 @@ func Whoami(c *gin.Context) {
 		response.Code = types.UnknownError
 		response.Data = types.TMember{}
 		c.JSON(http.StatusOK, response)
-		fmt.Printf("%+v %s\n", response.Code, err)
-
 		return
 	}
 
 	response.Code = types.OK
 	response.Data = *currentUser
 	c.JSON(http.StatusOK, response)
-	fmt.Printf("%+v \n", response.Code)
-
 }

@@ -4,7 +4,6 @@ import (
 	"camp-backend/initial"
 	"camp-backend/types"
 	"errors"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -118,14 +117,11 @@ func GetStudentCourse(c *gin.Context) {
 
 	request := new(types.GetStudentCourseRequest)
 	response := new(types.GetStudentCourseResponse)
-	fmt.Printf("%+v\n", request)
 
 	request.StudentID = c.Query("StudentID")
 	if request.StudentID == "" {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusOK, response)
-		fmt.Printf("%+v \n", response.Code)
-
 		return
 	}
 
@@ -134,17 +130,13 @@ func GetStudentCourse(c *gin.Context) {
 	if errors.Is(err, gorm.ErrRecordNotFound) || theUser.UserType.String() != "Student" {
 		response.Code = types.StudentNotExisted
 		c.JSON(http.StatusOK, response)
-		fmt.Printf("%+v \n", response.Code)
-
 		return
 	}
 
 	courseIDs, err := initial.RedisClient.SMembers(initial.RedisContext, "student:"+request.StudentID+":courses").Result()
-	if err != nil { //这是空课表吗
+	if err != nil {
 		response.Code = types.UnknownError
 		c.JSON(http.StatusOK, response)
-		fmt.Printf("%+v \n", response.Code)
-
 		return
 	}
 	courses := make([]types.TCourse, 0)
@@ -163,9 +155,11 @@ func GetStudentCourse(c *gin.Context) {
 	//	return
 	//}
 
-	response.Code = types.OK
+	if len(courses) == 0 {
+		response.Code = types.StudentHasNoCourse
+	} else {
+		response.Code = types.OK
+	}
 	response.Data.CourseList = courses
 	c.JSON(http.StatusOK, response)
-	fmt.Printf("%+v \n", response.Code)
-
 }
