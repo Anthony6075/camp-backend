@@ -5,7 +5,6 @@ import (
 	"camp-backend/initial"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"time"
 )
 
 func main() {
@@ -18,18 +17,6 @@ func main() {
 
 func setupRouter() *gin.Engine {
 	d := gin.Default()
-
-	d.GET("/test1", func(c *gin.Context) {
-		p := c.Query("p")
-		if p == "1" {
-			time.Sleep(10 * time.Second)
-			c.JSON(http.StatusOK, gin.H{"111": "OK"})
-		} else {
-			time.Sleep(2 * time.Second)
-			c.JSON(http.StatusOK, gin.H{"other": "OK"})
-		}
-	})
-
 	r := d.Group("/api/v1")
 
 	auth := r.Group("/auth")

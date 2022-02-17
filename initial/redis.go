@@ -5,6 +5,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-redis/redis/v8"
+	"strconv"
+	"sync"
 )
 
 const (
@@ -27,9 +29,9 @@ func SetupRedis() {
 	if err != nil {
 		panic(fmt.Sprintf("redis ping failed, err is %s", err))
 	}
-
-	InsertDataToRedis()
 }
+
+var CourseMutexes []sync.Mutex
 
 func InsertDataToRedis() {
 	students := make([]types.TMember, 0)
@@ -40,8 +42,14 @@ func InsertDataToRedis() {
 
 	courses := make([]types.TCourse, 0)
 	Db.Select("course_id", "capacity").Find(&courses)
+	CourseMutexes = make([]sync.Mutex, len(courses))
 	for _, v := range courses {
-		RedisClient.SAdd(RedisContext, "courses", v.CourseID)
+		intCourseID, _ := strconv.Atoi(v.CourseID)
+		c := &redis.Z{
+			Score:  float64(intCourseID),
+			Member: v.CourseID,
+		}
+		RedisClient.ZAdd(RedisContext, "courses", c)
 		RedisClient.HSet(RedisContext, "course:"+v.CourseID, "capacity", v.Capacity, "count", 0)
 	}
 }
