@@ -48,7 +48,7 @@ func Login(c *gin.Context) {
 
 	_, err = c.Cookie("camp-session")
 	if err != nil {
-		c.SetCookie("camp-session", currentUser.UserID, 3600, "/", "localhost", false, true)
+		c.SetCookie("camp-session", currentUser.UserID, 3600, "/", "", false, true)
 	}
 	response.Code = types.OK
 	response.Data.UserID = currentUser.UserID
@@ -65,7 +65,7 @@ func Logout(c *gin.Context) {
 		return
 	}
 
-	c.SetCookie("camp-session", "", -1, "/", "localhost", false, true)
+	c.SetCookie("camp-session", "", -1, "/", "", false, true)
 	response.Code = types.OK
 	c.JSON(http.StatusOK, response)
 }
