@@ -172,8 +172,11 @@ func GetTeacherCourse(c *gin.Context) {
 	courses := make([]types.TCourse, 0)
 	initial.Db.Where("teacher_id = ?", request.TeacherID).Find(&courses)
 	fmt.Println(courses)
+	response.Data.CourseList = make([]*types.TCourse, len(courses))
 	response.Code = types.OK
-	response.Data.CourseList = courses
+	for i, _ := range courses {
+		response.Data.CourseList[i] = &courses[i]
+	}
 	c.JSON(http.StatusOK, response)
 }
 

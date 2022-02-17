@@ -61,7 +61,7 @@ type GetTeacherCourseRequest struct {
 type GetTeacherCourseResponse struct {
 	Code ErrNo
 	Data struct {
-		CourseList []TCourse
+		CourseList []*TCourse
 	}
 }
 
