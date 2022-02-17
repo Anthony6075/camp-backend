@@ -4,6 +4,7 @@ import (
 	"camp-backend/initial"
 	"camp-backend/types"
 	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -19,6 +20,8 @@ func CreateMember(c *gin.Context) {
 	if err != nil {
 		response.Code = types.LoginRequired
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 
@@ -26,12 +29,16 @@ func CreateMember(c *gin.Context) {
 	if err = initial.Db.First(currentUser, userID).Error; err != nil {
 		response.Code = types.UnknownError
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 
 	if currentUser.UserType.String() != "Admin" {
 		response.Code = types.PermDenied
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 
@@ -39,14 +46,19 @@ func CreateMember(c *gin.Context) {
 	if err = c.BindJSON(request); err != nil {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
+	fmt.Printf("%+v\n", request)
 
 	theUser := new(types.TMember)
 	err = initial.Db.First(theUser, "username = ?", request.Username).Error
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		response.Code = types.UserHasExisted
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 
@@ -62,11 +74,15 @@ func CreateMember(c *gin.Context) {
 	if err = initial.Db.Omit("LearnCourses").Create(&newUser).Error; err != nil {
 		response.Code = types.UnknownError
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 	response.Code = types.OK
 	response.Data.UserID = strconv.FormatInt(currentMaxUserID, 10)
 	c.JSON(http.StatusOK, response)
+	fmt.Printf("%+v \n", response.Code)
+
 }
 
 func GetMember(c *gin.Context) {
@@ -77,6 +93,8 @@ func GetMember(c *gin.Context) {
 	if request.UserID == "" {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 
@@ -85,18 +103,24 @@ func GetMember(c *gin.Context) {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		response.Code = types.UserNotExisted
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 
 	if theUser.IsDeleted == true {
 		response.Code = types.UserHasDeleted
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 
 	response.Code = types.OK
 	response.Data = *theUser
 	c.JSON(http.StatusOK, response)
+	fmt.Printf("%+v \n", response.Code)
+
 }
 
 func GetMemberList(c *gin.Context) {
@@ -109,6 +133,8 @@ func GetMemberList(c *gin.Context) {
 	if err1 != nil || err2 != nil {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 
@@ -117,11 +143,15 @@ func GetMemberList(c *gin.Context) {
 		response.Code = types.UnknownError
 		response.Data.MemberList = make([]types.TMember, 0)
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 	response.Code = types.OK
 	response.Data.MemberList = members
 	c.JSON(http.StatusOK, response)
+	fmt.Printf("%+v \n", response.Code)
+
 }
 
 func UpdateMember(c *gin.Context) {
@@ -131,6 +161,8 @@ func UpdateMember(c *gin.Context) {
 	if err := c.BindJSON(request); err != nil {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 
@@ -139,6 +171,8 @@ func UpdateMember(c *gin.Context) {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		response.Code = types.UserNotExisted
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 
@@ -148,10 +182,14 @@ func UpdateMember(c *gin.Context) {
 	if err := initial.Db.Where(request.UserID).Updates(toUpdate).Error; err != nil {
 		response.Code = types.UnknownError
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 	response.Code = types.OK
 	c.JSON(http.StatusOK, response)
+	fmt.Printf("%+v \n", response.Code)
+
 }
 
 func DeleteMember(c *gin.Context) {
@@ -161,6 +199,8 @@ func DeleteMember(c *gin.Context) {
 	if err := c.BindJSON(request); err != nil {
 		response.Code = types.ParamInvalid
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 
@@ -169,6 +209,8 @@ func DeleteMember(c *gin.Context) {
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		response.Code = types.UserNotExisted
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 
@@ -178,8 +220,12 @@ func DeleteMember(c *gin.Context) {
 	if err := initial.Db.Where(request.UserID).Updates(toUpdate).Error; err != nil {
 		response.Code = types.UnknownError
 		c.JSON(http.StatusOK, response)
+		fmt.Printf("%+v \n", response.Code)
+
 		return
 	}
 	response.Code = types.OK
 	c.JSON(http.StatusOK, response)
+	fmt.Printf("%+v \n", response.Code)
+
 }
