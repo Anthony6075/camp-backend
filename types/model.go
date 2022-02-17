@@ -10,7 +10,7 @@ type TMember struct {
 	Password     string    `json:"-" gorm:"not null"`
 	UserType     UserType  `gorm:"not null"`
 	IsDeleted    bool      `json:"-" gorm:"not null;default:false"`
-	LearnCourses []TCourse `gorm:"many2many:learn_courses;joinForeignKey:user_id;joinReferences:course_id;"`
+	LearnCourses []TCourse `json:"-" gorm:"many2many:learn_courses;joinForeignKey:user_id;joinReferences:course_id;"`
 }
 
 type TCourse struct {

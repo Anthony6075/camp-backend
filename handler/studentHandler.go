@@ -134,7 +134,7 @@ func GetStudentCourse(c *gin.Context) {
 	}
 
 	courseIDs, err := initial.RedisClient.SMembers(initial.RedisContext, "student:"+request.StudentID+":courses").Result()
-	if err != nil { //这是空课表吗
+	if err != nil {
 		response.Code = types.UnknownError
 		c.JSON(http.StatusOK, response)
 		return
@@ -155,7 +155,11 @@ func GetStudentCourse(c *gin.Context) {
 	//	return
 	//}
 
-	response.Code = types.OK
+	if len(courses) == 0 {
+		response.Code = types.StudentHasNoCourse
+	} else {
+		response.Code = types.OK
+	}
 	response.Data.CourseList = courses
 	c.JSON(http.StatusOK, response)
 }
