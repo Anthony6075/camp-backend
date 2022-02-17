@@ -204,6 +204,7 @@ func ScheduleCourse(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+	fmt.Printf("%+v\n", request)
 	g := request.TeacherCourseRelationShip
 
 	for teacher, _ := range g {
